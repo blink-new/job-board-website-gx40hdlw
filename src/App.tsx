@@ -159,9 +159,9 @@ function App() {
 
   const formatSalary = (min?: number, max?: number, currency = 'USD') => {
     if (!min && !max) return 'Salary not specified'
-    if (min && max) return `$${min.toLocaleString()} - $${max.toLocaleString()}`
-    if (min) return `$${min.toLocaleString()}+`
-    return `Up to $${max?.toLocaleString()}`
+    if (min && max) return `${min.toLocaleString()} - ${max.toLocaleString()}`
+    if (min) return `${min.toLocaleString()}+`
+    return `Up to ${max?.toLocaleString()}`
   }
 
   const handleApply = (job: Job) => {
@@ -259,12 +259,12 @@ function App() {
               </div>
             </div>
             <div>
-              <Select value={jobTypeFilter} onValueChange={setJobTypeFilter}>
+              <Select value={jobTypeFilter || "all"} onValueChange={(value) => setJobTypeFilter(value === "all" ? "" : value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Job Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Types</SelectItem>
+                  <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="full-time">Full Time</SelectItem>
                   <SelectItem value="part-time">Part Time</SelectItem>
                   <SelectItem value="contract">Contract</SelectItem>
@@ -273,12 +273,12 @@ function App() {
               </Select>
             </div>
             <div>
-              <Select value={experienceFilter} onValueChange={setExperienceFilter}>
+              <Select value={experienceFilter || "all"} onValueChange={(value) => setExperienceFilter(value === "all" ? "" : value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Experience" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Levels</SelectItem>
+                  <SelectItem value="all">All Levels</SelectItem>
                   <SelectItem value="entry">Entry Level</SelectItem>
                   <SelectItem value="mid">Mid Level</SelectItem>
                   <SelectItem value="senior">Senior Level</SelectItem>
@@ -376,7 +376,7 @@ function App() {
             <DialogHeader>
               <DialogTitle className="text-2xl">{selectedJob.title}</DialogTitle>
             </DialogHeader>
-            <JobDetailView job={selectedJob} onApply={handleApply} />
+            <JobDetailView job={selectedJob} onApply={handleApply} formatSalary={formatSalary} />
           </DialogContent>
         </Dialog>
       )}
@@ -385,7 +385,7 @@ function App() {
 }
 
 // Job Detail Component
-function JobDetailView({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
+function JobDetailView({ job, onApply, formatSalary }: { job: Job; onApply: (job: Job) => void; formatSalary: (min?: number, max?: number, currency?: string) => string }) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-start">
